@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Library Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <h2>Library Management</h2>
+            <div class="flex items-center gap-4">
+                <span id="user-email-display" class="text-muted" style="font-weight: 500; font-size: 0.875rem;"></span>
+                <button id="logout-btn" class="btn btn-outline">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Stats Section -->
+        <section class="mb-8 admin-only hidden">
+            <h3 class="mb-4">Overview</h3>
+            <div class="grid grid-cols-5" id="stats-container">
+                <div class="card stat-card">
+                    <span class="stat-title">Total Books</span>
+                    <span class="stat-value" id="stat-total-books">-</span>
+                </div>
+                <div class="card stat-card">
+                    <span class="stat-title">Total Users</span>
+                    <span class="stat-value" id="stat-total-users">-</span>
+                </div>
+                <div class="card stat-card">
+                    <span class="stat-title">Issued Books</span>
+                    <span class="stat-value" id="stat-issued-books">-</span>
+                </div>
+                <div class="card stat-card">
+                    <span class="stat-title">Returned Books</span>
+                    <span class="stat-value" id="stat-returned-books">-</span>
+                </div>
+                <div class="card stat-card">
+                    <span class="stat-title">Total Fine</span>
+                    <span class="stat-value" id="stat-total-fine">$-</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Grid -->
+        <div class="dashboard-main-grid">
+            <!-- Books List -->
+            <section class="card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3>Books Inventory</h3>
+                    <button class="btn btn-outline" id="refresh-books-btn" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;">Refresh</button>
+                </div>
+                <div class="table-container">
+                    <table id="books-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Qty</th>
+                                <th class="admin-only hidden">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="books-tbody">
+                            <tr><td colspan="4" class="text-center text-muted" style="padding: 2rem;">Loading books...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Forms Section -->
+            <section class="grid" style="gap: 1.5rem; align-content: start;">
+                <!-- Add Book Form -->
+                <div class="card admin-only hidden" id="admin-add-book-section">
+                    <h3 class="mb-4">Add New Book <span class="badge badge-primary">Admin</span></h3>
+                    <div id="add-book-alert" class="alert"></div>
+                    <form id="add-book-form">
+                        <div class="form-group">
+                            <label class="form-label">Title</label>
+                            <input type="text" id="book-title" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Author</label>
+                            <input type="text" id="book-author" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Quantity</label>
+                            <input type="number" id="book-quantity" class="form-control" min="1" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-full">Add Book</button>
+                    </form>
+                </div>
+
+                <!-- Issue Book Form -->
+                <div class="card">
+                    <h3 class="mb-4">Issue Book</h3>
+                    <div id="issue-book-alert" class="alert"></div>
+                    <form id="issue-book-form">
+                        <div class="form-group">
+                            <label class="form-label">User ID</label>
+                            <input type="text" id="issue-user-id" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Book ID</label>
+                            <input type="text" id="issue-book-id" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-full">Issue Book</button>
+                    </form>
+                </div>
+
+                <!-- Return Book Form -->
+                <div class="card">
+                    <h3 class="mb-4">Return Book</h3>
+                    <div id="return-book-alert" class="alert"></div>
+                    <form id="return-book-form">
+                        <div class="form-group">
+                            <label class="form-label">Issue ID</label>
+                            <input type="text" id="return-issue-id" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-full">Return Book</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- Admin All Users Table -->
+        <section class="card mt-8 admin-only hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h3>All Users <span class="badge badge-primary">Admin</span></h3>
+                <button class="btn btn-outline" id="refresh-users-btn" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;">Refresh</button>
+            </div>
+            <div class="table-container">
+                <table id="users-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Fine</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-tbody">
+                        <tr><td colspan="6" class="text-center text-muted" style="padding: 2rem;">Loading users...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- User My Data Section -->
+        <div class="grid grid-cols-2 user-only hidden mt-8">
+            <section class="card">
+                <h3>My Issued Books</h3>
+                <div class="table-container mt-4">
+                    <table id="my-issued-books-table">
+                        <thead>
+                            <tr>
+                                <th>Book Title</th>
+                                <th>Author</th>
+                                <th>Issue Date</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="my-issued-books-tbody">
+                            <tr><td colspan="5" class="text-center text-muted" style="padding: 2rem;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <section class="card">
+                <h3>My Fine</h3>
+                <div class="stat-card mt-4">
+                    <span class="stat-title text-muted">Total Fine:</span>
+                    <span class="stat-value" style="color: var(--danger);" id="my-fine-amount">₹-</span>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Edit Book Modal -->
+    <div id="edit-book-modal" class="modal hidden">
+        <div class="modal-content card">
+            <span class="close-modal" id="close-edit-modal">&times;</span>
+            <h3 class="mb-4">Edit Book</h3>
+            <div id="edit-book-alert" class="alert"></div>
+            <form id="edit-book-form">
+                <input type="hidden" id="edit-book-id">
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" id="edit-book-title" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Author</label>
+                    <input type="text" id="edit-book-author" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Quantity</label>
+                    <input type="number" id="edit-book-quantity" class="form-control" min="0" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-full">Update Book</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
