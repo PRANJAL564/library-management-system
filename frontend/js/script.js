@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'https://library-management-system-tbu2.onrender.com';
 
 // --- UTILITIES ---
 function showAlert(elementId, message, type = 'success') {
