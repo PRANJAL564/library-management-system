@@ -3,7 +3,8 @@ const cors = require("cors");
 const app = express();
 
 app.use(cors({
-   origin: "https://library-management-system-kappa-lovat.vercel.app/"
+    origin: "https://library-management-system-kappa-lovat.vercel.app",
+    credentials: true
 }));
 app.use(express.json());
 
